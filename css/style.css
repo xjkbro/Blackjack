@@ -1,0 +1,180 @@
+/* Color Palette https://www.colourlovers.com/palette/189189/.infrared */
+
+@import url('https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i|Lobster|Lobster+Two:400,400i,700,700i|Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i');
+
+* {
+    margin:0;
+    padding:0;
+    border:0;
+    box-sizing: border-box;
+}
+body{
+    background-color: #53777A;
+    height: 100vh;
+}
+
+
+header{
+    margin:0px;
+    padding:20px;
+    font-family: Lobster Two;
+    background-color: #542437;
+    color: #ECD078;
+    box-shadow: 0px -5px 50px 10px black;
+    z-index:1;
+}
+header h1{
+    text-align: center;
+    text-shadow: 2px 2px 5px black;
+}
+.scores{
+    position:relative;
+    /*background-color: #C02942;*/
+    padding: 20px;
+    font-family: Lobster Two;
+    font-size: 28px;
+    color: #ECD078;
+    text-shadow: 2px 2px 5px black;
+  
+
+    /*box-shadow: 0px 0px 50px 5px black;*/
+}
+.scores #restart {
+    float: right;
+}
+.scores #restart:hover{
+    color: #D95B43;
+    cursor: pointer;
+}
+.table_cards ul{
+    list-style-type: none;
+}
+
+.table #computerHands ul li {
+    box-sizing: content-box;
+    display: none; /*inline-block;*/
+    position: relative;
+    top: 10px;
+    left: 20px;
+}
+.hand #playerHands ul li {
+    box-sizing: content-box;
+    display: none; /*inline-block;*/
+    position: relative;
+    top: 300px;
+    left: 20px;
+}
+.table #computerHands p {
+    position:absolute;
+    display: none;
+    /*background-color: #C02942;*/
+    padding: 20px;
+    font-family: Lobster Two;
+    font-size: 28px;
+    color: #ECD078;
+    text-shadow: 2px 2px 5px black;
+
+    float:right;
+    top: 250px;
+    right: 100px;
+
+}
+.hand #playerHands p {
+    position:absolute;
+    display: none;
+    /*background-color: #C02942;*/
+    padding: 20px;
+    font-family: Lobster Two;
+    font-size: 28px;
+    color: #ECD078;
+    text-shadow: 2px 2px 5px black;
+
+    float:right;
+    bottom: 150px;
+    right: 100px;
+
+}
+.table #computerHands ul li img{
+    object-fit: cover;
+    width: 150px;
+    height: 200px;
+    border: 2px;
+    box-shadow: 2px 2px 5px black;
+    border-radius: 10px; 
+    margin:0px 5px;
+}
+
+.hand #playerHands ul li img{
+    object-fit: cover;
+    width: 150px;
+    height: 200px;
+    border: 2px;
+
+
+    box-shadow: 2px 2px 5px black;
+    border-radius: 10px; 
+    margin:0px 5px;
+}
+
+
+.options{
+    float:right;
+    margin:20px;
+    position: absolute;
+    top: 40vh;
+    right:5vh;
+    font-family: Lobster Two;
+}
+.options ul{
+    list-style-type: none;
+    
+}
+.options ul li{
+    padding: 0px 50px;
+    margin:0px;
+
+    text-align: center;
+    line-height: 50px;
+    margin: 25px 0px;
+    background-color: #C02942;
+    font-size: 20px;
+    color: #ECD078;
+    text-shadow: 2px 2px 5px black;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px 0px black;
+}
+.options ul li:hover{
+    background-color: #D95B43;
+    cursor: pointer;
+
+}
+#hit,#stand{
+    display: none;
+}
+
+
+.highlight{
+    font-family: Lobster Two;
+    font-size: 72px;
+    position:fixed;
+    text-align: center;
+    color: #ECD078;
+    text-shadow: 2px 2px 5px black;
+    width: 100%;
+    top: 40%;
+    z-index: -1;
+
+}
+.highlight ul{
+    list-style-type: none;
+}
+
+
+.highlight ul li #bust,#lost,#win,#draw{
+    background-color: #542437;
+    line-height: 50px;
+    margin: 50px 0px;
+    padding:50px;
+    box-shadow: 2px 2px 5px black;
+    display: none;
+}
