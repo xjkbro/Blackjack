@@ -166,7 +166,7 @@ header h1{
     color: #ECD078;
     text-shadow: 2px 2px 5px black;
     width: 100%;
-    top: 40%;
+    top: 45%;
     z-index: -1;
 
 }
@@ -190,6 +190,13 @@ header h1{
         padding: 0 20px;
         margin: 10px 0;
     }
+    .options {
+        top: 20vh;
+        right: 1vh;
+    }
+.highlight ul li #bust,#lost,#win,#draw{
+    padding: 25px;
+}
     .hand #playerHands p, .table #computerHands p{
         right:25px;
     }
