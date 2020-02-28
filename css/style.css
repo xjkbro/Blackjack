@@ -50,6 +50,9 @@ header h1{
 .table_cards ul{
     list-style-type: none;
 }
+.play-table {
+    height: 75%;
+}
 
 .table #computerHands ul li {
     box-sizing: content-box;
@@ -68,6 +71,7 @@ header h1{
 .table #computerHands p {
     position:absolute;
     display: none;
+
     /*background-color: #C02942;*/
     padding: 20px;
     font-family: Lobster Two;
@@ -191,8 +195,19 @@ header h1{
     }
     .table #computerHands ul,
     .hand #playerHands ul {
+        width: 75vw;
         position: relative;
         left: 100px;
+    }
+    .table #computerHands ul{
+        bottom: 25px;
+    }
+    .hand #playerHands ul{
+        bottom: 150px;
+    }
+    .table #computerHands p,
+    .hand #playerHands p {
+    visibility: hidden;
     }
     .table #computerHands ul li img, .hand #playerHands ul li img {
     margin: 0 0 0 -100px;
