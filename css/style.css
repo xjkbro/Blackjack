@@ -1,3 +1,4 @@
+
 /* Color Palette https://www.colourlovers.com/palette/189189/.infrared */
 
 @import url('https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i|Lobster|Lobster+Two:400,400i,700,700i|Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i');
@@ -177,4 +178,24 @@ header h1{
     padding:50px;
     box-shadow: 2px 2px 5px black;
     display: none;
+}
+
+
+@media all and (max-width:600px) {
+    .options ul li {
+        padding: 0 20px;
+        margin: 10px 0;
+    }
+    .hand #playerHands p, .table #computerHands p{
+        right:25px;
+    }
+    .table #computerHands ul,
+    .hand #playerHands ul {
+        position: relative;
+        left: 100px;
+    }
+    .table #computerHands ul li img, .hand #playerHands ul li img {
+    margin: 0 0 0 -100px;
+    }
+
 }

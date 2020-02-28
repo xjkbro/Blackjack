@@ -3,12 +3,43 @@ console.log("If you see this, you're amazing! :)");
 /* 
     Global Initializaitons
 */
-var deck = ["SA","S2","S3","S4","S5","S6","S7","S8","S9","S10","SK","SQ","SJ",
-"CA","C2","C3","C4","C5","C6","C7","C8","C9","C10","CK","CQ","CJ",
-"HA","H2","H3","H4","H5","H6","H7","H8","H9","H10","HK","HQ","HJ",
-"DA","D2","D3","D4","D5","D6","D7","D8","D9","D10","DK","DQ","DJ"];
+// var deck = ["SA", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "SK", "SQ", "SJ",
+//     "CA", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "CK", "CQ", "CJ",
+//     "HA", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "HK", "HQ", "HJ",
+//     "DA", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10", "DK", "DQ", "DJ"];
 
-var numDeck= 52;
+var deck = new Array();
+var suits = ["S", "D", "H", "C"];
+const values = ["2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K", "A"];
+
+function createDeck() {
+    deck = new Array();
+    //typical length of a blackjack deck is 6 decks of 52
+    for (let x = 0; x < 6; x++) {
+        for (let i = 0; i < values.length; i++) {
+            for (let j = 0; j < suits.length; j++) {
+                let card = suits[j] + values[i];
+                // console.log(card);
+                // console.log(card[0]);
+                deck.push(card);
+            }
+        }
+    }
+}
+
+
+function getCardImg(hand, card) {
+    let link;
+    if (card[1] == "X")
+        link = "https://deckofcardsapi.com/static/img/" + "0" + card[0] + ".png";
+    else
+        link = "https://deckofcardsapi.com/static/img/" + card[1] + card[0] + ".png";
+
+    hand.img.push(link);
+    //console.log(link);
+}
+
+
 var playerScore = 0;
 var totalPlays = 0;
 const playerScore_span = document.getElementById("wins");
@@ -28,13 +59,23 @@ const win_div = document.getElementById("win");
 
 
 
-var compHand = [];
-var playerHand = [];
+var compHand = {
+    cards: [],
+    value: [],
+    img: []
+};
+var playerHand = {
+    cards: [],
+    value: [],
+    img: []
+};
 var compSum = 0;
 var playerSum = 0;
 
-var playerHandCnt=0;
-var compHandCnt=0;
+var playerHandCnt = 0;
+var compHandCnt = 0;
+
+var deck_url = ""
 
 main();
 
@@ -43,66 +84,78 @@ main();
 Basic Black Jack Functions
 */
 
-function readCard(card,hand){
-    switch(card){
+function shuffle() {
+    for (let i = 0; i < 1024; i++) {
+        let location1 = Math.floor((Math.random() * deck.length));
+        let location2 = Math.floor((Math.random() * deck.length));
+        let temp = deck[location1];
+
+        deck[location1] = deck[location2];
+        deck[location2] = temp;
+        // console.log(temp);
+    }
+}
+
+function readCard(card, hand) {
+    switch (card) {
         case "SA":
         case "CA":
         case "HA":
         case "DA":
-            hand.push("A");
+            hand.value.push("A");
             break;
         case "S2":
         case "C2":
         case "H2":
         case "D2":
-            hand.push(2);
+            hand.value.push(2);
             break;
         case "S3":
         case "C3":
         case "H3":
         case "D3":
-            hand.push(3);
+            hand.value.push(3);
             break;
         case "S4":
         case "C4":
         case "H4":
         case "D4":
-            hand.push(4);
+            hand.value.push(4);
             break;
         case "S5":
         case "C5":
         case "H5":
         case "D5":
-            hand.push(5);
+            hand.value.push(5);
             break;
         case "S6":
         case "C6":
         case "H6":
         case "D6":
-            hand.push(6);
+            hand.value.push(6);
             break;
         case "S7":
         case "C7":
         case "H7":
         case "D7":
-            hand.push(7);
+            hand.value.push(7);
             break;
         case "S8":
         case "C8":
         case "H8":
         case "D8":
-            hand.push(8);
-            break;      
+            hand.value.push(8);
+            break;
         case "S9":
         case "C9":
         case "H9":
         case "D9":
-            hand.push(9);
+            hand.value.push(9);
             break;
-        case "S10":
-        case "C10":
-        case "H10":
-        case "D10":
+        case "SX":
+        case "CX":
+        case "HX":
+        case "DX":
         case "SK":
         case "CK":
         case "HK":
@@ -115,39 +168,42 @@ function readCard(card,hand){
         case "CJ":
         case "HJ":
         case "DJ":
-            hand.push(10);
+            hand.value.push(10);
             break;
 
     }
+    hand.cards.push(card);
+    getCardImg(hand, card);
+    // console.log("value push");
+    // console.log(hand.value);
 }
-function pickCard(hand){
-    randNum = Math.floor(Math.random()*52);
-    readCard(deck[randNum],hand);
+function pickCard(hand) {
+    let card = deck.pop();
+    readCard(card, hand);
     visualTable(hand);
 }
-function sumHand(hand){
+function sumHand(hand) {
     var hasA = false;
     var numA = 0;
-    sum=0;
-    for(var i = 0; i<hand.length; i++)
-    {
-        if(hand[i] == "A")
-        {
+    sum = 0;
+    for (var i = 0; i < hand.value.length; i++) {
+        if (hand.value[i] == "A") {
             hasA = true;
-            numA++;    
+            numA++;
         }
         else
-            sum += hand[i];
+            sum += hand.value[i];
     }
-    if(hasA)
-    {
-        for(var i = 0; i<numA;i++){    
-            if(sum+11 >=21)
+    if (hasA) {
+        for (var i = 0; i < numA; i++) {
+            if (sum + 11 >= 21)
                 sum++;
             else
-                sum+=11;
+                sum += 11;
         }
     }
+    // console.log("hand at sumation ");
+    // console.log(hand);
 
     return sum;
 }
@@ -155,53 +211,66 @@ function sumHand(hand){
 /*
     Visualizations
 */
+function displayCard(hand, pos) {
+    let cp = parseInt(pos[1]) - 1;
+    document.getElementById(pos).style.display = "inline-block";
+    document.getElementById(pos).firstChild.src = hand.img[cp];
+}
 
-function visualTable(hand){
-    if(compHand == hand){ //isComp
-        var c ="";
-        switch(hand.length){
-            case 5: document.getElementById("c5").style.display="inline-block";
-            case 4: document.getElementById("c4").style.display="inline-block";
-            case 3: document.getElementById("c3").style.display="inline-block";
-            case 2: document.getElementById("c2").style.display="inline-block";
-            case 1: document.getElementById("c1").style.display="inline-block";
+function faceUpCards(hand) {
+    for (let i = 0; i < hand.value.length; i++) {
+        console.log(i);
+        document.getElementById("c" + `${i + 1}`).firstChild.src = hand.img[i];
+    }
+}
+function faceDownCards(pos) {
+    document.getElementById(pos).firstChild.src = "files/ninja.png";
+}
+function visualTable(hand) {
+    if (compHand == hand) { //isComp
+        var c = "";
+        switch (hand.value.length) {
+            case 5: document.getElementById("c5").style.display = "inline-block";
+            case 4: document.getElementById("c4").style.display = "inline-block";
+            case 3: document.getElementById("c3").style.display = "inline-block";
+            case 2: document.getElementById("c2").style.display = "inline-block";
+            case 1: document.getElementById("c1").style.display = "inline-block";
         }
         compSum_p.innerHTML = sumHand(compHand);
     }
-    else if(playerHand == hand){  //isPlayer
-        var c ="";
-        switch(hand.length){
-            case 5: document.getElementById("m5").style.display="inline-block";
-            case 4: document.getElementById("m4").style.display="inline-block";
-            case 3: document.getElementById("m3").style.display="inline-block";
-            case 2: document.getElementById("m2").style.display="inline-block";
-            case 1: document.getElementById("m1").style.display="inline-block";
+    else if (playerHand == hand) {  //isPlayer
+        var c = "";
+        switch (hand.value.length) {
+            case 5: displayCard(hand, "m5");
+            case 4: displayCard(hand, "m4");
+            case 3: displayCard(hand, "m3");
+            case 2: displayCard(hand, "m2");
+            case 1: displayCard(hand, "m1");
         }
         playerSum_p.innerHTML = sumHand(playerHand);
     }
-    
+
 
 }
 /*
     Options menu
 */
 
-function hit(){
+function hit() {
     pickCard(playerHand);
     playerSum = sumHand(playerHand);
-    
+
     display();
-    
-    if(playerSum > 21){
+
+    if (playerSum > 21) {
         result("bust");
     }
 
 }
-function stand(){
+function stand() {
 
-    while(playerSum >= compSum){
-        if(playerSum == compSum && 0 != Math.floor(Math.random)*2)
-        {
+    while (playerSum >= compSum) {
+        if (playerSum == compSum && 0 != Math.floor(Math.random) * 2) {
             pickCard(compHand);
         }
         else if (playerSum > compSum)
@@ -209,25 +278,25 @@ function stand(){
 
         compSum = sumHand(compHand);
     }
-    
+
     display();
-    if(compSum >21){
+    if (compSum > 21) {
         result("win");
     }
-    else if (playerSum < compSum){
+    else if (playerSum < compSum) {
         result("lost");
     }
-    else if(playerSum == compSum)
+    else if (playerSum == compSum)
         result("draw");
 
 
 }
-function deal(){
-    setTimeout(pickCard(playerHand),3000);
-    setTimeout(pickCard(compHand),3000);
+function deal() {
+    setTimeout(pickCard(playerHand), 3000);
+    setTimeout(pickCard(compHand), 3000);
 
-    setTimeout(pickCard(playerHand),3000);
-    setTimeout(pickCard(compHand),3000);
+    setTimeout(pickCard(playerHand), 3000);
+    setTimeout(pickCard(compHand), 3000);
 
     deal_div.style.display = "none";
 
@@ -243,40 +312,42 @@ function deal(){
 }
 /*
     Board Setups
-*/ 
-function result(way){
-    if(way == "bust")
-    {
+*/
+function result(way) {
+
+    faceUpCards(compHand);
+
+    if (way == "bust") {
         console.log("BUST");
         compSum_p.style.display = "inline-block";
         bust_div.style.display = "block";
-        setTimeout(function(){bust_div.style.display = "none";},1000);
+        setTimeout(function () {
+            bust_div.style.display = "none";
+        }, 1000);
 
     }
-    else if(way == "lost")
-    {
+    else if (way == "lost") {
         console.log("YOU LOSE");
         compSum_p.style.display = "inline-block";
         lost_div.style.display = "block";
-        setTimeout(function(){lost_div.style.display = "none";},1000);
+        setTimeout(function () { lost_div.style.display = "none"; }, 1000);
     }
-    else if(way == "win")
-    {
+    else if (way == "win") {
         console.log("YOU WIN!");
         compSum_p.style.display = "inline-block";
         win_div.style.display = "block";
-        setTimeout(function(){win_div.style.display = "none";},1000);
+        setTimeout(function () { win_div.style.display = "none"; }, 1000);
         playerScore++;
     }
-    else{
+    else {
         console.log("Draw");
         compSum_p.style.display = "inline-block";
         draw_div.style.display = "block";
-        setTimeout(function(){draw_div.style.display = "none";},1000);
+        setTimeout(function () { draw_div.style.display = "none"; }, 1000);
     }
 
-    stand_div.style.display="none";
-    hit_div.style.display="none";
+    stand_div.style.display = "none";
+    hit_div.style.display = "none";
 
     totalPlays++;
     playerScore_span.innerHTML = playerScore;
@@ -284,32 +355,48 @@ function result(way){
     clear();
 }
 
-function restart(){
+function restart() {
     clear();
     playerScore = 0;
     totalPlays = 0;
-    playerCnt=0;
-    compCnt=0;
+    playerCnt = 0;
+    compCnt = 0;
     playerScore_span.innerHTML = playerScore;
     totalScore_span.innerHTML = totalPlays;
     clearBoard();
+    createDeck();
+    shuffle();
 }
 
-function clear(){
+function clear() {
     compSum = 0;
     playerSum = 0;
-    playerHand = [];
-    compHand = [];
+    playerHand = {
+        cards: [],
+        value: [],
+        img: []
+    };
+    compHand = {
+        cards: [],
+        value: [],
+        img: []
+    };
 
     deal_div.style.display = "block";
-    
+
 }
-function clearBoard(){
+function clearBoard() {
     document.getElementById("c1").style.display = "none";
+    faceDownCards("c1");
     document.getElementById("c2").style.display = "none";
+    faceDownCards("c2");
     document.getElementById("c3").style.display = "none";
+    faceDownCards("c3");
     document.getElementById("c4").style.display = "none";
+    faceDownCards("c4");
     document.getElementById("c5").style.display = "none";
+    faceDownCards("c5");
+
     document.getElementById("m1").style.display = "none";
     document.getElementById("m2").style.display = "none";
     document.getElementById("m3").style.display = "none";
@@ -321,12 +408,13 @@ function clearBoard(){
 
 }
 
-function display(){                 //For Debugging
+function display() {                 //For Debugging
 
     console.log(playerHand);
     console.log(compHand);
     console.log(playerSum);
     console.log(compSum);
+    console.log("Deck count is: " + deck.length);
 
 }
 
@@ -337,21 +425,23 @@ function display(){                 //For Debugging
 
 function main() {
 
-    hit_div.addEventListener('click', function(){
+    createDeck();
+    shuffle();
+
+    hit_div.addEventListener('click', function () {
         hit();
-        
+
     })
-    stand_div.addEventListener('click', function(){
+    stand_div.addEventListener('click', function () {
         stand();
     })
-    deal_div.addEventListener('click', function(){
+    deal_div.addEventListener('click', function () {
         clearBoard();
         deal();
-        
         display();
 
     })
-    restart_div.addEventListener('click', function(){
+    restart_div.addEventListener('click', function () {
         restart();
     })
 
